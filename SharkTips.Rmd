@@ -1,0 +1,149 @@
+---
+title: "Shark simulation tutorial"
+author: "Jeffrey Durieux, MSc"
+date: "12/5/2017"
+output: 
+  pdf_document:
+    toc: true 
+    toc_depth: 2
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+This documents contains a brief tutorial for running simulations on the Shark computer cluster. Working on a computer cluster can be daunting task, especially when you have never worked in a UNIX/Linux type of environment before. The goal of this document is to provide you with small pieces of code and workflows that may help you with your own research projects. 
+
+Note: in order to use R on shark, you first need to 'load' it. This can simply be done on the command line, type: module load R/3.3.3 (or take another version)
+
+
+# Running example: the factorial simulation design
+
+The simulation study is a crucial tool for evaluating (newly) developed data analysis methods. Often, a researcher wants to evaluate a method by simulating data, and subsequently analyze these data, under a variety of pre-determined circumstances. Below you can find a \texttt{R}-script that contains a typical workflow to: (1) Generate data according a factorial design (2) function calls to analyze the generated data with a method of interest (3) Simulation evaluation function calls (4) Saving output 
+
+The main simulation script: MySimulationScript.R
+Note the piece of code on the second line in the script. The R function commandArgs() extracts command line arguments. This function enables us to run our whole simulation script with some provided parameters to the script. 
+```{#numCode .R .numberLines}
+   # args is a stringvector
+   args <- commandArgs(TRUE)
+   args <- as.numeric(args)
+   
+   RowOfDesign <- args[1]
+   Replication <- args[2]
+   
+   set.seed(Replication + 123456)
+   
+   ### Libraries and source code
+   library(ica)
+   library(mclust)
+   source("/home/durieux/Rscripts/MyUsefullFunctions.R")
+   
+   
+   ### Simulation design example
+   Components <- c(2, 5, 20)
+   Clusters <- c(2, 4)
+   Error <- c(0.05, 0.2, 0.5)
+   
+   # Design is a data.frame with all possible combinations of the factor levels
+   # 18 rows and 3 columns   
+   Design <- expand.grid(Components = Components, Clusters = Clusters, Error = Error)
+   
+   ######### simulation ###########
+   # Generate data
+   SimData<-do.call( MySimDataFunction, as.list( Design[ RowOfDesign, ] ) )
+   
+   # Analyze data
+   tmp <- proc.time()
+   Analysis <- MyFunction(data = SimData$X, nQ =Design$Components[RowOfDesign] ,
+               nC = Design$Clusters[RowOfDesign])
+   time <- proc.time() - tmp
+   
+   # Evaluate simulation
+   ARI <- adjustedRandIndex(SimData$P, Analysis$P)
+   
+   # save stuff on export
+   setwd("/exports/fsw/durieuxj/")
+   
+   # Write output, also possible to first save everything in a list object
+   save(Simdata, file =paste("Simdata",RowOfDesign, Replication ,".Rdata" , sep ="")
+   save(Analysis, file =paste("Analysis",RowOfDesign, Replication ,".Rdata" , sep ="")
+   save(ARI, file =paste("Evaluation",RowOfDesign, Replication ,".Rdata" , sep ="")
+   save(time, file =paste("Time",RowOfDesign, Replication ,".Rdata" , sep ="")
+```
+
+# The bash script used to run Jobs
+
+Below you can find a bash script (let's call it RunMySim.sh) that is used on Shark to run a \texttt{R}-script
+The bash script 'starts' the \texttt{R}-script 'MySimulationScript.R' with the command R CMD BATCH and includes some provided arguments: \$i and \$j. The \$ sign indicates that it is a replacement character, with a for loop we will change those values on the fly (see next part). The values provided to these replacement characeters will be collected with the commandArgs() function in our \texttt{R}-script. Also note that you can receive an email notification when your job starts and when it is finished. Just change my emailadress please :)
+
+```{#numCode .sh .numberLines}
+
+#!/bin/bash
+#$ -S /bin/bash
+#$ -q all.q
+#$ -N modsel
+#$ -cwd
+#$ -j Y
+#$ -V
+#$ -m be
+#$ -M j.durieux@fsw.leidenuniv.nl 
+
+R CMD BATCH "--args $i $j" MySimulationScript.R
+
+```
+
+
+# Start your embarrassingly parallel jobs
+
+We have a \texttt{R}-script with simulation code. We also have a bash script RunMySim.sh. But how do we actually start our simulation? We simply use the qsub command in a (double) for loop.
+
+Our simulation design consists out of three factors: Clusters, Components and Error. The factors have 3, 2 and 3 levels respectively. So we have a 3x2x3 factorial design. Our design matrix (a matrix where all combinations of the factor levels are represented) has, therefore, 3x2x3=18 rows.
+
+Let say we will use 10 replications of this design. We can then use a double for loop to qsub our bash script to the Shark job scheduler. The iterators of the double for loop is also our parameters that we pass to our bash script (and the bash script subsequently pass those parameters to our R-script). 
+
+You can submit this double for loop on the command line in Shark. This double for loop will start 10x18=180 jobs that will run in parallel. Each job has no dependency on each other, meaning that you can run each row of the design completely seperate. This is known as embarrasingly parallel computing and it saves you a lot of comutation time!
+
+```{#numCode .sh .numberlines}
+
+for replication in {1..10}
+do
+  for rownumber in {1..18}
+  do
+    qsub -l h_vmem=4G -v i=$rownumber,j=$replication RunMySim.sh
+  done
+done
+```
+
+
+# Installing R packages on Shark
+
+R script 'InstallPackages.R':
+```{r, eval=F}
+install.packages(c("ica","Matrix"), Sys.getenv("R_LIBS_USER"), repos = "http://cran.case.edu")
+```
+
+Bash script: InstallPackages.sh
+```{#numCode .sh .numberlines}
+#!/bin/bash
+#$ -S /bin/bash
+#$ -q all.q
+#$ -N installpackages
+#$ -cwd
+#$ -j Y
+#$ -V
+#$ -m be
+#$ -M j.durieux@fsw.leidenuniv.nl
+
+R CMD BATCH InstallPackages.R
+```
+
+How to run it in Shark:
+On the commandline type: qsub InstallPackages.sh
+
+Don't forget to load R first (module load R/3.3.3)
+
+
+
