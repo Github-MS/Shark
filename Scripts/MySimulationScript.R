@@ -3,11 +3,8 @@
 args <- commandArgs(TRUE)
 args <- as.numeric(args)
 
-#RowOfDesign <- args[1]
-#Replication <- args[2]
-
-RowOfDesign <- 1
-Replication <- 2
+RowOfDesign <- args[1]
+Replication <- args[2]
 
 ### Simulation design example
 samp <- c(10, 20, 40, 80)
@@ -32,7 +29,6 @@ set.seed((Replication + 1000)*RowOfDesign)
 
 #Source the relevant R functions of our example
 
-setwd("~/surfdrive/SHARK_USEFULL/SharkDocuments/Shark/Scripts/")
 source("MyDataGeneration.R")
 source("Method_new.R")
 source("Method_old.R")
@@ -62,9 +58,8 @@ MyResult2 <- MyEvaluation(MyAnalysisResult2)
 MyResult <- c(MyResult1, MyResult2)
 
 # save stuff on export
-#setwd("/exports/fsw/youraccount/")
+setwd("/exports/fsw/youraccount/")
 
-setwd("~/Desktop/SimTestElise/")
 
 # Write output (also possible to first save everything in a list object)
 
