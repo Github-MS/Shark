@@ -1,5 +1,3 @@
-# Fork all results and put it in a matrix
-
 # set directory with results
 setwd("~/Desktop/SharkData/")
 
