@@ -1,7 +1,0 @@
-for replication in {1..2}
-do
-   for rownumber in {1..2}
-   do
-        echo -v i=$rownumber,j=$replication RunMySimulation.sh
-   done
-done
