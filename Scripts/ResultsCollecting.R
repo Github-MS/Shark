@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 # Collect all results and put it in a matrix
 
-=======
->>>>>>> 6255271ad5577e610d021f4fa183913954bac8b8
 # set directory with results
 setwd("~/Desktop/SharkData/")
 
