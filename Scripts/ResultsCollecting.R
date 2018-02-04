@@ -1,4 +1,4 @@
-# Fork all results and put it in a matrix
+# Collect all results and put it in a matrix
 
 # set directory with results
 setwd("~/Desktop/SharkData/")
@@ -6,6 +6,7 @@ setwd("~/Desktop/SharkData/")
 library(gtools)
 
 ## original design
+
 samp <- c(10, 20, 40, 80)
 es <- c(0.2, 0.5, 0.8)
 Design <- expand.grid(samp = samp, es = es)
@@ -21,7 +22,7 @@ files <- files[scram]
 
 files <- mixedsort(files)
 
-# 
+###
 RepIdxList <- list()
 for(rep in 1:10){
   RepIdxList[[rep]] <- grep(pattern = paste("Rep",rep,sep = "" ), files )
@@ -35,7 +36,7 @@ idx <- unlist(RepIdxList)
 files <- files[idx]
 
 # rbind design k times and cbind files names (so that you can check whether the right values are taken)
-Results <- do.call(what = rbind, args = replicate(10,Design, simplify = F))
+Results <- do.call(what = rbind, args = replicate(10, Design, simplify = F))
 Results <- cbind(Results, files)
 
 # the sapply function loads the results and preserves the file name (in the rows).

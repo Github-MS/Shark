@@ -1,7 +1,7 @@
 ---
 title: "Shark simulation tutorial"
 author: "Jeffrey Durieux and Elise Dusseldorp"
-date: "01/10/2018"
+date: "04/02/2018"
 output: 
   pdf_document:
     toc: true 
@@ -41,13 +41,12 @@ Start with the formulation of:
 
 *	specify the design factors (i.e. the factors you are going to vary systematically). In our example, we refer to these factors as:
 
-    +	Samp (sample size, having 3 levels: N = 100, 500, 1000);
-    +	Es (effectsize, having 2 levels: d = 0.5 and 1.0), and
-    +	J (number of predictors, having 2 levels: j = 5 and 20) 
+    +	Samp (sample size, having 4 levels: N = 10, 20, 40, and 80);
+    +	Es (effectsize, having 3 levels: d = 0.2, 0.5 and 0.8)
+    
+*	number of replications within each cell: k. In our small example, k = 10
 
-*	number of replications within each cell: k. In our small example, k =10
-
-For our example, our design contains in total 3 (Samp) by 2 (ES) by 2 (J) = 12 cells. For each cell we will generate *k* = 10 data sets.
+For our example, our design contains in total 4 (Samp) by 3 (Es) 12 cells. For each cell we will generate *k* = 10 data sets.
 
 
 ## Step 2: Statistical Analysis
@@ -73,72 +72,113 @@ Write the following functions in \texttt{R}:
 
 # Performance of a simulation study on a cluster computer
 
-## The main simulation script: MySimulationScript.R
-Note the piece of code on the second line in the script. The R function commandArgs() extracts command line arguments. This function enables us to run our whole simulation script with some provided parameters to the script. 
+## The main simulation script: 
 
-Note: in order to use R on shark, you first need to 'load' it. This can simply be done on the command line, type: module load R/3.3.3 (or take another version)
+Below you can see the main simulation script called MainSimulationScript.R. This is the script that that contains your whole simulation study. Here, your design is coded, analyses are specified and evaluation criteria are computed. Moreover, saving your output to your directory is specified.
+
+Some usefull and sometimes necessary functions:
+
+* commandArgs()
+    - captures supplied command line arguments (see section 4.2 and 4.3)
+* expand.grid()
+    - usefull functions that creates a data frame from all combinations of factor variables
+* set.seed()
+    - important for replication of your simulation study
+* do.call()
+    - neat function to execute a function with a list of supplied arguments
 
 
 ```{#numCode .R .numberLines}
-   # args is a stringvector
-   args <- commandArgs(TRUE)
-   args <- as.numeric(args)
-   
-   RowOfDesign <- args[1]
-   Replication <- args[2]
-   
-   set.seed(Replication * RowOfDesign)
-   
-   ### Libraries and source code
-   library(ica)
-   library(mclust)
-   source("/YOUR_PATH_TO_DIRECTORY_WITH_SCRIPTS/MyUsefullFunctions.R")
-   
-   
-   ### Simulation design 
-   Components <- c(2, 5, 20)
-   Clusters <- c(2, 4)
-   Error <- c(0.05, 0.2, 0.5)
-   
-   
-   # expand.grid is usefull function to obtain a data.frame that contains all 
-   # possible combinations of the specified factor levels
-   # In this example, Desing will have 12 rows and 3 columns
-   
-   Design <- expand.grid(Components = Components, Clusters = Clusters, Error = Error)
-   
-   ######### simulation ###########
-   
-   # Step 1: Generate data
-   SimData<-do.call( MySimDataFunction, as.list( Design[ RowOfDesign, ] ) )
-   
-   # Step 2: Analyze data
-   
-   tmp <- proc.time() # start timer
-   
-   Analysis <- MyFunction(data = SimData$X, nQ =Design$Components[RowOfDesign] ,
-               nC = Design$Clusters[RowOfDesign])
-   
-   time <- proc.time() - tmp  # calculate duration of analysis
-   
-   # Step 3: Evaluate simulation
-   ARI <- adjustedRandIndex(SimData$P, Analysis$P)
-   
-   # save stuff in your directory
-   # Note that for the Shark cluster, it is advised to store data on /exports/fsw/YOURDIRECTORY
-   setwd("/exports/fsw/durieuxj/")
-   
-   # Write output, also possible to first save everything in a list object
-   save(Simdata, file =paste("Simdata",RowOfDesign, Replication ,".Rdata" , sep ="")
-   save(Analysis, file =paste("Analysis",RowOfDesign, Replication ,".Rdata" , sep ="")
-   save(ARI, file =paste("Evaluation",RowOfDesign, Replication ,".Rdata" , sep ="")
-   save(time, file =paste("Time",RowOfDesign, Replication ,".Rdata" , sep ="")
+# MySimulationScript.R
+
+# args is a stringvector
+args <- commandArgs(TRUE)
+args <- as.numeric(args)
+
+RowOfDesign <- args[1]
+Replication <- args[2]
+
+### Simulation design example
+samp <- c(10, 20, 40, 80)
+es <- c(0.2, 0.5, 0.8)
+
+# Design is a data.frame with all possible combinations of the factor levels
+# Each row of the design matrix represents a cell of your simulation design
+
+Design <- expand.grid(samp = samp, es = es)
+
+# set a random number seed to be able to replicate the result exactly
+set.seed((Replication + 1000)*RowOfDesign)
+
+###Preparation:
+
+# If you use R packages that are not standard:
+# Install the relevant R packages, for example:
+
+#install.packages("ica")
+
+#Always use library() to activate the package
+
+#library(ica) #By the way: this is just to illustrate, 
+#we do not use this package for our example
+
+### Source the relevant R functions of our example
+### These functions are available from: 
+### https://github.com/Github-MS/Shark/tree/master/Scripts
+
+source("/home/durieuxj/SharkTutorial/MyDataGeneration.R")
+source("/home/durieuxj/SharkTutorial/Method_new.R")
+source("/home/durieuxj/SharkTutorial/Method_old.R")
+source("/home/durieuxj/SharkTutorial/MyEvaluation.R")
+
+######### simulation ###########
+# Generate data
+SimData <- do.call(MyDataGeneration, Design[RowOfDesign, ]  )
+
+# Analyze data set with Method_new
+tmp <- proc.time()
+MyAnalysisResult1 <- Method_new(SimData)
+
+#Analyze data set with Method_old
+MyAnalysisResult2 <- Method_old(SimData)
+time <- proc.time() - tmp #save the time to run the analyses of one cell of the design. 
+# Also possible to time both analyses seperately 
+
+#Combine relevant results of the analysis by the two methods in a vector (optional)
+MyAnalysisResult <- c(MyAnalysisResult1$p.value, MyAnalysisResult2$p.value)
+
+#Evaluate the analysis results of Method_new and Mehod_old
+MyResult1 <- MyEvaluation(MyAnalysisResult1)
+MyResult2 <- MyEvaluation(MyAnalysisResult2)
+
+#combine the results in a vector:
+MyResult <- c(MyResult1, MyResult2)
+
+# save stuff on export
+setwd("/exports/fsw/durieuxj/SharkTutorial/")
+
+# Write output (also possible to first save everything in a list object)
+
+#optional to save the data
+save(SimData, file =paste("Simdata","Row", RowOfDesign, 
+      "Rep", Replication ,".Rdata" , sep =""))
+
+#optional to save the full analysis result
+save(MyAnalysisResult, file =paste("Analysis","Row", RowOfDesign, 
+      "Rep", Replication ,".Rdata" , sep =""))
+
+save(MyResult, file =paste("MyResult", "Row", RowOfDesign,
+      "Rep", Replication ,".Rdata" , sep =""))
+
+#optional to save timing of analyses
+save(time, file =paste("Time", "Row", RowOfDesign, 
+      "Rep", Replication ,".Rdata" , sep =""))
 ```
 
 ## The bash script used to run Jobs
 
-Below you can find a bash script (let's call it RunMySim.sh) that is used on Shark to run a \texttt{R}-script
-The bash script 'starts' the \texttt{R}-script 'MySimulationScript.R' with the command R CMD BATCH and includes some provided arguments: \$i and \$j. The \$ sign indicates that it is a replacement character, with a for loop we will change those values on the fly (see next part). The values provided to these replacement characeters will be collected with the commandArgs() function in our \texttt{R}-script. Also note that you can receive an email notification when your job starts and when it is finished. Just change my emailadress please :)
+Below you can find a bash script (let's call it RunMySimulation.sh) that is used on Shark to run a \texttt{R}-script
+The bash script 'starts' the \texttt{R}-script 'MainSimulationScript.R' with the command R CMD BATCH and includes some provided arguments: \$i and \$j. The \$ sign indicates that it is a replacement character, with a for loop we will change those values on the fly (see part 4.3). The values provided to these replacement characeters will be collected with the commandArgs() function in our \texttt{R}-script. 
 
 ```{#numCode .sh .numberLines}
 
@@ -159,26 +199,92 @@ R CMD BATCH "--args $i $j" MySimulationScript.R
 
 ## Start your embarrassingly parallel jobs
 
-We have a \texttt{R}-script with simulation code. We also have a bash script RunMySim.sh. But how do we actually start our simulation? We simply use the qsub command in a (double) for loop.
+We have a \texttt{R}-script with simulation code. We also have a bash script RunMySim.sh. But how do we actually start our simulation? We simply use the *qsub* command in a double for loop. Here our jobs are submitted to shark in a parallel fashion. 
 
-Our simulation design consists out of three factors: Clusters, Components and Error. The factors have 3, 2 and 3 levels respectively. So we have a 3x2x3 factorial design. Our design matrix (a matrix where all combinations of the factor levels are represented) has, therefore, 3x2x3=18 rows.
+Remember, for the current example the simulation design consists out of two factors: Sample size (Samp) and effect size (Es). The factors have 4 and 3 levels respectively. So we have a 4x3 factorial design. And we want to replicate this design *k* = 10 times. Thus, we will generate, analyze and evaluate a total of 4 x 3 x 10 = 120 datasets. This can be done as follow: 
 
-Let say we will use 10 replications of this design. We can then use a double for loop to qsub our bash script to the Shark job scheduler. The iterators of the double for loop is also our parameters that we pass to our bash script (and the bash script subsequently pass those parameters to our R-script). 
-
-You can submit this double for loop on the command line in Shark. This double for loop will start 10x18=180 jobs that will run in parallel. Each job has no dependency on each other, meaning that you can run each row of the design completely seperate. This is known as embarrasingly parallel computing and it saves you a lot of comutation time!
 
 ```{#numCode .sh .numberlines}
 
 for replication in {1..10}
 do
-  for rownumber in {1..18}
+  for rownumber in {1..12}
   do
-    qsub -l h_vmem=4G -v i=$rownumber,j=$replication RunMySim.sh
+    qsub -l h_vmem=1G -v i=$rownumber,j=$replication RunMySim.sh
   done
 done
 ```
 
-# Collecting the results and evaluate with ANOVA
+For this small simulation example, requesting 1G of memory (-l h_vmem=1G) is enough. 
+
+*Note: in order to use R on shark, you first need to 'load' it. This can simply be done on the command line, type: module load R/3.3.3 (or select another version)*
+
+You can submit the double for loop on the command line in Shark. This double for loop will start 10 x 12 = 120 jobs that will run in parallel. Each job has no dependency on each other, meaning that you can run each row of the design completely seperate. This is known as embarrasingly parallel computing and it saves you a lot of comutation time!
+
+# Collecting the results 
+
+After all submitted jobs are done, you should collect all results from your output folder. Below you can find a script that collects the right output and automatically stores the results in a matrix. This matrix can be used for further analyses such as an ANOVA.
+
+Note that collecting the results can be done on Shark. But sometimes it is easier to first download the results to your own device and then collect the final results. 
+
+Note that this script uses the package gtools. You first need to install this package.
+
+```{#numCode .sh .numberlines}
+# Collect all results and put it in a matrix
+
+# set directory with results
+setwd("~/Desktop/SharkData/")
+
+library(gtools)
+
+## original design
+
+samp <- c(10, 20, 40, 80)
+es <- c(0.2, 0.5, 0.8)
+Design <- expand.grid(samp = samp, es = es)
+
+# pattern matching with grep
+files <- dir()
+idx <- grep(pattern = "MyResult", files)
+files <- files[idx]
+
+# test to see mixedsort() does it's job
+scram <- sample(1:120, 120, replace = F)
+files <- files[scram]
+
+files <- mixedsort(files)
+
+###
+RepIdxList <- list()
+for(rep in 1:10){
+  RepIdxList[[rep]] <- grep(pattern = paste("Rep",rep,sep = "" ), files )
+}
+
+idx_to_remove <- RepIdxList[[1]] %in% RepIdxList[[10]]
+RepIdxList[[1]] <- RepIdxList[[1]][!idx_to_remove]
+
+idx <- unlist(RepIdxList)
+
+files <- files[idx]
+
+# rbind design k times and cbind files names (so that you can check whether the right values are taken)
+
+Results <- do.call(what = rbind, args = replicate(10, Design, simplify = F))
+Results <- cbind(Results, files)
+
+# the sapply function loads the results and preserves the file name (in the rows).
+# This is usefull for checking whether you did everything right
+
+Res <- t( sapply(files, function(x) get(load(x) ) ) )
+
+Results <- cbind(Results, Res)
+colnames(Results) <- c("samp", "es", "files", "res1", "res2")
+
+save(Results, file = "AllResults.Rdata")
+```
+
+
+\newpage
 
 # Installing R packages on Shark
 
@@ -197,7 +303,7 @@ Bash script: InstallPackages.sh
 #$ -j Y
 #$ -V
 #$ -m be
-#$ -M j.durieux@fsw.leidenuniv.nl
+#$ -M YOUREMAIL@fsw.leidenuniv.nl
 
 R CMD BATCH InstallPackages.R
 ```
