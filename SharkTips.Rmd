@@ -1,5 +1,5 @@
 ---
-title: "Shark simulation tutorial"
+title: "Shark simulation tutorial using R"
 author: "Jeffrey Durieux and Elise Dusseldorp"
 date: "04/02/2018"
 output: 
