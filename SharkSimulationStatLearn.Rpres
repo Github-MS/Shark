@@ -1,0 +1,159 @@
+Simulation studies on Shark
+========================================================
+author: Jeffrey Durieux
+date: 5 Feb 2018
+autosize: true
+
+Background
+========================================================
+<br>
+
+- Common task in our group: the simulation study
+- (Perhaps) lacking in our group: discussion *about* simulation studies
+
+
+
+Background
+========================================================
+<br>
+
+- Common task in our group: the simulation study
+- (Perhaps) lacking in our group: discussion *about* simulation studies
+
+<br> 
+
+Questions:
+
+- Can we benefit from each other's experiences?
+- What are good simulation study practices?
+
+
+Background
+========================================================
+
+Original idea: transfer knowledge to our master students
+
+- Basic UNIX/Linux skills
+- Computer cluster skills
+- Develop a parallel computation mind
+
+
+Shark Tips and Tricks document
+========================================================
+
+- Version controlled project
+- Everyone (from our department) can collaborate
+- Accessible to everyone
+
+Basic idea:
+
+- Tutorial about how to carry out a full factorial sim (on Shark)
+- Intended audience; M&S master students
+
+
+Shark Tips and Tricks document
+========================================================
+
+[`R` markdown document](https://github.com/Github-MS/Shark)
+
+Parts:
+- How to set up a simulation study (design)
+- Preperation of actual code
+- How to run everything one Shark
+- Evaluation of results
+
+To do:
+
+- Read the document
+- Check Github page https://github.com/Github-MS/Shark
+
+
+Running example
+========================================================
+
+- Example simulation: compare t-test vs Mann-Whitney U test
+- Data generation: `rnorm(Samp, 0, 1); rnorm(Samp, 0 + Es, 1)`
+- Design:
+
+```{r, eval=TRUE}
+Samp <- c(10, 20, 40, 80); Es <- c(0.2, 0.5, 0.8);
+Design <- expand.grid(Samp=Samp, Es=Es)
+Design
+```
+
+
+Graphical overview
+========================================================
+
+![alt text](overview.png)
+
+
+Bash script
+============================================================
+
+```{r, eval=FALSE}
+#!/bin/bash
+#$ -S /bin/bash
+#$ -q all.q
+#$ -N sim_1
+#$ -cwd
+#$ -j Y
+#$ -V
+#$ -m be
+#$ -M YOUREMAIL@fsw.leidenuniv.nl 
+
+R CMD BATCH "--args $i $j" MySimulationScript.R
+
+```
+
+qsub using a for loop
+========================================================
+
+On the command line:
+
+```{#numCode .sh .numberlines}
+
+for replication in {1..10}
+do
+  for rownumber in {1..12}
+  do
+    qsub -l h_vmem=1G -v i=$rownumber,j=$replication RunMySimulation.sh
+  done
+done
+```
+
+Parallel computing
+=======================
+Using this simulation approach (i.e., combining commandArgs with qsub for loop) allows for some flexibility:
+
+- single for loop: run whole design k times in parallel
+- double for loop: run every cell of design, k times in parallel
+- triple for loop: run every cell k times AND *do something extra...*
+
+
+Small tutorial exercise 
+========================================================
+
+Simulation example
+
+- t-test versus Mann Whitney U test
+- copy results to your Shark account
+- Try to run the simulation
+    - may need to change directory paths etc...
+    
+- Collect the results
+
+
+Collecting the results
+============================================================
+
+Due to the parallel computation approach a total of 12 x 10 different results are saved to your shark export folder
+
+A *tailor-made* script is necessary to collect these results into a single matrix for further analysis
+
+You can run this script on Shark. But I usually find it more convenient to first download all results to my laptop and then start the result collecting script.
+
+It would be nice to develop a program/script than is able to surpass the *tailor-made* scripting for result collection. But for now this will do...
+
+https://github.com/Github-MS/Shark/blob/master/Scripts/ResultsCollecting.R
+
