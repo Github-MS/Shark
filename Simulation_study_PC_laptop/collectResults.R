@@ -23,7 +23,7 @@ Results_K <- do.call(what = rbind, args = replicate(TotalCells, matrix(c(1:K), n
 #Create the final results matrix
 ResultsSimAll <-as.data.frame(cbind(Results_des, K = Results_K, Results_sim))
 #Give the columns the right name:
-names(ResultsSimAll) <- c("Samp", "Es", "K", "Method1", "Method2")
+names(ResultsSimAll) <- c(names(Design), "K", "Method1", "Method2")
 head(ResultsSimAll)
 
 save(ResultsSimAll, file = "AllResultsSim.Rdata")
