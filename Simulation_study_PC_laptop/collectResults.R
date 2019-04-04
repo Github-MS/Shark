@@ -16,14 +16,15 @@ for (i in 1:TotalCells){
   Results_sim[(K*(i-1)+1):(i*K), ] <- MyResult
 }
 
-#rbind the Design matrix K times
-Results_des <- do.call(what = rbind, args = replicate(K, Design, simplify = F))
+#repeate the Design matrix K times
+Results_des <- Design[rep(1:nrow(Design),each=K),]
+rownames(Results_des) <- 1:nrow(Results_des)
 #rbind the vector 1:K TotalCelss times
 Results_K <- do.call(what = rbind, args = replicate(TotalCells, matrix(c(1:K), ncol = 1), simplify = F))
 #Create the final results matrix
 ResultsSimAll <-as.data.frame(cbind(Results_des, K = Results_K, Results_sim))
 #Give the columns the right name:
-names(ResultsSimAll) <- c("Samp", "Es", "K", "Method1", "Method2")
+names(ResultsSimAll) <- c(names(Design), "K", "Method1", "Method2")
 head(ResultsSimAll)
 
 save(ResultsSimAll, file = "AllResultsSim.Rdata")
