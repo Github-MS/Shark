@@ -19,8 +19,8 @@ MySimulationCell<- function(Design = Design, RowOfDesign = 1, K = 2){
     #Combine relevant results of the analysis by the two methods in a vector (optional)
     MyAnalysisResult <- c(MyAnalysisResult1$p.value, MyAnalysisResult2$p.value)
     #Evaluate the analysis results of Method_new (Result1) and Mehtod_old (Result2)
-    MyResult1 <- MyEvaluation(MyAnalysisResult1)
-    MyResult2 <- MyEvaluation(MyAnalysisResult2)
+    MyResult1 <- MyEvaluationPC(MyAnalysisResult1)
+    MyResult2 <- MyEvaluationPC(MyAnalysisResult2)
     #store the results in the right row k of your result matrix:
     #We only store the second result which is the evaluation criterion
     MyResult[k, ] <- c(MyResult1, MyResult2)
