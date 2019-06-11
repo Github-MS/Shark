@@ -2,7 +2,7 @@
 title: "Shark manual"
 subtitle: "Version 3"
 author: "Jeffrey Durieux, Elise Dusseldorp, Wouter van Loon & Juan Claramunt"
-date: "07/09/2018"
+date: "11/06/2019"
 output:
   pdf_document:
     number_sections: yes
@@ -305,11 +305,11 @@ The basic syntax of scp is:
 
 **scp [from] [to]**
 
-where “from” can be a filename or a folder and “to” contains your netid, the hostname of the cluster login node, and the destination directory if you are tranfering files to SHARK and vice versa if you are downloading files from SHARK. For example, to \underline{upload} files:
+where "from" can be a filename or a folder and "to" contains your netid, the hostname of the cluster login node, and the destination directory if you are tranfering files to SHARK and vice versa if you are downloading files from SHARK. For example, to \underline{upload} files:
 
 **scp myfile.txt SHARKusername@shark.researchlumc.nl:/exports/fsw**
 
-In this example, “myfile.txt’ is copied to the directory /exports/fsw of SHARK.
+In this example, "myfile.txt" is copied to the directory /exports/fsw of SHARK.
 
 If you want to transfer the whole folder with its content you need to add -r, for example:
 
@@ -359,6 +359,19 @@ Fourth, transfer the file from the jump host to your laptop by typing on your te
 Optional: Remove the files from the jump host.
 
 
+Alternatively, if you have created the **resshark** config file to connect it is possible to transfer the files without using the scp command twice:
+
+\underline{Transfer the file text.txt from laptop/PC to your SHARK.}
+
+Open a terminal and type:
+
+**scp  text.txt resshark:/home/hkelderman**
+
+\underline{Transfer the file text.txt from SHARK to your laptop/PC.}
+
+Connect to SHARK and type:
+
+**scp resshark:/home/hkelderman/text.txt MyDocuments/text.txt**
 
 ### Transfer the files using SFTP client for Mac (Fugu) and Linux (Filezilla)
 
@@ -375,7 +388,7 @@ Next, type your password.
 
 An additional window appears that displays your tunnel. The Local port was set automatically. Check this number (the local port), you will need it.
 
-In the main window, fill out the field Connect to: with ‘localhost’, type your SHARKusername,and the number of your local port in the field ‘Port:’. Then, press connect, and enter your password. 
+In the main window, fill out the field Connect to: with "localhost"", type your SHARKusername,and the number of your local port in the field "Port:". Then, press connect, and enter your password. 
 
 On the left side of the screen you will have the files/folders on your computer and on the right side of the screen the files/folders on the SHARK cluster. ou can now transfer files by dragging them between the left and right screen.
 
@@ -399,7 +412,7 @@ To change the password, you should type in the command line *passwd*. Then, ente
 
 **Note**: Remember to update your password in all the SHARK related software, otherwise you will probably get in the screen a warning message: *REMOTE HOST IDENTIFICATION HAS CHANGED!*. This warning also appears if the remote machine has a new update.
 
-To solve this problem open the file where your key’s are saved and remove the key that is old. In the warning message it says which is the key to be changed. This means we need to remove the corresponding line from the file ‘known_hosts’.
+To solve this problem open the file where your key's are saved and remove the key that is old. In the warning message it says which is the key to be changed. This means we need to remove the corresponding line from the file "known_hosts".
 
 # Specification of a simulation study
 
@@ -427,15 +440,15 @@ Start with the formulation of:
 
 *	The true scenario(s)/model(s) from which you will generate your artificial data, and specify from which distributions you generate the variables that are included in the model.
 
-    -In our example, we have a continuous, standardized outcome variable and one variable group that has two categories (i.e., two groups).
+    - In our example, we have a continuous, standardized outcome variable and one variable group that has two categories (i.e., two groups).
 
 *	Specify the design factors (i.e. the factors you are going to vary systematically). 
     
     In our example, there are two design factors:
     
-    – Samp (sample size, having 4 levels: N = 10, 20, 40, and 80 in the example);
+    - Samp (sample size, having 4 levels: N = 10, 20, 40, and 80 in the example);
     
-    – Es (effect size, having 3 levels: d = 0.2, 0.5 and 0.8 in the example). In this example, the effect size is the standardized difference in means between the two groups. 
+    - Es (effect size, having 3 levels: d = 0.2, 0.5 and 0.8 in the example). In this example, the effect size is the standardized difference in means between the two groups. 
     
 *	Number of replications within each cell: *k*. In our small example, k = 10.
 
