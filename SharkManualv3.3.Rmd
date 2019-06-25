@@ -365,13 +365,13 @@ Alternatively, if you have created the **resshark** config file to connect it is
 
 Open a terminal and type:
 
-**scp  text.txt resshark:/home/hkelderman**
+**scp  text.txt resshark:/home/SHARKusername**
 
 \underline{Transfer the file text.txt from SHARK to your laptop/PC.}
 
 Connect to SHARK and type:
 
-**scp resshark:/home/hkelderman/text.txt MyDocuments/text.txt**
+**scp resshark:/home/SHARKusername/text.txt MyDocuments/text.txt**
 
 ### Transfer the files using SFTP client for Mac (Fugu) and Linux (Filezilla)
 
