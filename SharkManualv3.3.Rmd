@@ -369,7 +369,7 @@ Open a terminal and type:
 
 \underline{Transfer the file text.txt from SHARK to your laptop/PC.}
 
-Connect to SHARK and type:
+Open a terminal and type:
 
 **scp resshark:/home/SHARKusername/text.txt MyDocuments/text.txt**
 
