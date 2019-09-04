@@ -2,7 +2,7 @@
 title: "Shark manual"
 subtitle: "Version 3"
 author: "Jeffrey Durieux, Elise Dusseldorp, Wouter van Loon & Juan Claramunt"
-date: "11/06/2019"
+date: "04/09/2019"
 output:
   pdf_document:
     number_sections: yes
@@ -609,9 +609,21 @@ R CMD BATCH "--args $i $j" MainSimulationScript.R
 
 For the small simulation example we are going to run, requesting 1G of memory (-l h_vmem=1G) is enough. 
 
+For your own simulation study, we advise you to start by running only the row of your design which you expect to require more memory. If 1Gb is enough there is no need to modify the script to run all the jobs. In case the memory is not enough (SHARK will return an error), increase it gradually, for example, with increments of 0.5Gb. Asking for too much memory will require a node with more memory, and consequently, your job will be more time in the queue.
+
+
 ## Start your embarrassingly parallel jobs
 
 We have an \texttt{R}-script with simulation code, *MainSimulationScript.R*. We also have a bash script *RunMySimulation.sh* which 'starts' the \texttt{R}-script. But how do we actually start our simulation? We simply use the *qsub* command in a double for-loop. Thus, our jobs are submitted to shark in a parallel fashion. 
+
+Let's suppose that we want to submit all the replications for the first row of our design matrix. The code should be as follow:
+
+```{#numCode3a .sh .numberlines}
+
+for replication in {1..10}; do
+qsub -v i=1,j=$replication RunMySimulation.sh; done
+```
+
 
 Remember, for the current example the simulation design consists of two factors: Sample size (Samp) and effect size (Es). The factors have 4 and 3 levels respectively. So we have a 4x3 factorial design. And we want to replicate this design *k* = 10 times. Thus, we will generate, analyze and evaluate a total of 4 x 3 x 10 = 120 datasets. This can be done as follow: 
 
@@ -796,6 +808,8 @@ Once R is open install the package you want as usual in R, using:
 install.packages("<package_name>").
 
 Choose a CRAN mirror, and say that you want to create a personal folder to install the package when Shark asks you (this will happen the first time you install a package).
+
+*Note:* Once you have finished, remember to exit R using q(), and then, logout from the SHARK node typing 'exit'. Otherwise, the job will continue in the queue.
 
 
 **Option 2 (only works when you already have a personal folder):**
