@@ -2,7 +2,7 @@
 title: "Shark manual"
 subtitle: "Version 4"
 author: "Jeffrey Durieux, Elise Dusseldorp, Wouter van Loon & Juan Claramunt"
-date: "23/07/2020"
+date: "14/01/2022"
 output:
   pdf_document:
     number_sections: yes
@@ -51,13 +51,22 @@ There are several options to connect to SHARK. They depend on your operating sys
 
 \noindent\fbox{%
     \parbox{\textwidth}{%
-\underline{Server information:}\\
+\underline{Server information of 1st login node:}\\
 
-\textbf{IP address:} 145.88.76.243\\
-\textbf{Hostname:} res-hpc-lo01\\
-\textbf{Port:} 22}%
+\textbf{IP address:} 145.88.76.217\\
+\textbf{Hostname:} res-hpc-lo02\\
+\textbf{Port:} 22}\\
 }
 
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\underline{Server information of 2nd login node:}\\
+
+\textbf{IP address:} 145.88.76.219\\
+\textbf{Hostname:} res-hpc-lo04\\
+\textbf{Port:} 22}%
+}
 
 ### Windows users
 
@@ -69,8 +78,11 @@ In order to connect to a cluster computer using Windows it is necessary to insta
     2. Introduce IP address or hostname (see details above).
     3. Select ssh.
     4. (Optional) Set a name under saved sessions and save. 
-    5. (Optional) At the connection setting, fill in 60 at the Seconds between keepalives. If needed, enable the Enable TCP keepalives.
-    6. (Optional) At the X11 setting, you can enable the Enable X11 forwarding. Do this if you need graphical output, but for this to get this working, you need to install separately a X11 server for Windows.
+    5. (Optional) At the connection setting, fill in 60 at the Seconds between keepalives.
+    If needed, enable the Enable TCP keepalives.
+    6. (Optional) At the X11 setting, you can enable the Enable X11 forwarding. 
+    Do this if you need graphical output, but for this to get this working, 
+    you need to install separately a X11 server for Windows.
     5. Left click on open.
     6. Introduce your SHARKusername.
     7. Introduce your password.
@@ -83,7 +95,7 @@ First option (the session is saved for future connections):
     1. Open MobaXterm.
     2. Click on sessions.
     3. Click on ssh.
-    4. Fill in the 'Remote host' (res-hpc-lo01 or 145.88.76.243).
+    4. Fill in the 'Remote host' (res-hpc-lo02 or 145.88.76.217, or res-hpc-lo04 or 145.88.76.219).
     5. Select specify username and introduce your SHARKusername, and set port to 22.
     6. (Optional) Check the 'Follow SSH path' in the 'Advanced SSH settings'-TAB.
     7. (Optional) Un-check the 'Display reconnection message at session end' in
@@ -96,7 +108,7 @@ Second option (faster):
 
     1. Open MobaXterm
     2. Click on start local terminal.
-    3. Type: ssh <SHARKusername>@145.88.76.243 .
+    3. Type: ssh <SHARKusername>@145.88.76.217 or ssh <SHARKusername>@145.88.76.219 .
     4. Introduce your password.
     5. Congratulations! You are now in SHARK.
     
@@ -106,22 +118,24 @@ Second option (faster):
 First option (recommended):
 
     1. Open a Terminal and create a directory (if needed) .ssh in your home directory. 
-    2. Create a config file inside your .ssh directory and add the following: vi ~/.ssh/config (only the first time)
+    2. Create a config file inside your .ssh directory and add the following: vi ~/.ssh/config 
+    (only the first time)
     3. Add to the config file: (only the first time)
-      Host res-hpc-lo01
-        Hostname 145.88.76.243
+      Host res-hpc-lo02
+        Hostname 145.88.76.217
         User <SHARKUsername>
         ServerAliveInterval 60
     4. Set the permissions for the user for the .ssh directory: chmod 700 ~/.ssh (only the first time)  
-    5. Set the permissions for the user on all the files in your .ssh directory: chmod 600 ~/.ssh/* (only the first time)
-    6. Type ssh <SHARKUsername>@res-hpc-lo01
+    5. Set the permissions for the user on all the files in your .ssh directory: chmod 600 ~/.ssh/* 
+    (only the first time)
+    6. Type ssh <SHARKUsername>@res-hpc-lo02
     7. Type your password.
     8. Congratulations! You are now in SHARK.
 
 Second option (faster):
 
     1. Open the terminal.
-    2. Type: ssh -XY <SHARKusername>@res-hpc-lo01
+    2. Type: ssh -XY <SHARKusername>@res-hpc-lo02
     3. Type your password.
     4. Congratulations! You are now in SHARK.
     
@@ -130,22 +144,24 @@ Second option (faster):
 First option (recommended):
 
     1. Open a Terminal and create a directory (if needed) .ssh in your home directory. 
-    2. Create a config file inside your .ssh directory and add the following: vi ~/.ssh/config (only the first time)
+    2. Create a config file inside your .ssh directory and add the following: vi ~/.ssh/config 
+    (only the first time)
     3. Add to the config file: (only the first time)
-      Host res-hpc-lo01
-        Hostname 145.88.76.243
+      Host res-hpc-lo02
+        Hostname 145.88.76.217
         User <SHARKUsername>
         ServerAliveInterval 60
     4. Set the permissions for the user for the .ssh directory: chmod 700 ~/.ssh (only the first time)  
-    5. Set the permissions for the user on all the files in your .ssh directory: chmod 600 ~/.ssh/* (only the first time)
-    6. Type ssh <SHARKUsername>@res-hpc-lo01
+    5. Set the permissions for the user on all the files in your .ssh directory: chmod 600 ~/.ssh/* 
+    (only the first time)
+    6. Type ssh <SHARKUsername>@res-hpc-lo02
     7. Type your password.
     8. Congratulations! You are now in SHARK.
 
 Second option (faster):
 
     1. Open the terminal.
-    2. Type: ssh -XY <SHARKusername>@res-hpc-lo01
+    2. Type: ssh -XY <SHARKusername>@res-hpc-lo02
     3. Type your password.
     4. Congratulations! You are now in SHARK.
 
@@ -173,12 +189,15 @@ For any device on any location, follow the next steps.
     2. Introduce IP address or hostname (see details above).
     3. Select ssh.
     4. (Optional) Set a name under saved sessions and save. 
-    5. (Optional) At the connection setting, fill in 60 at the Seconds between keepalives. If needed, enable the Enable TCP keepalives.
-    6. (Optional) At the X11 setting, you can enable the Enable X11 forwarding. Do this if you need graphical output, but for this to get this working, you need to install separately a X11 server for Windows.
+    5. (Optional) At the connection setting, fill in 60 at the Seconds between keepalives. 
+    If needed, enable the Enable TCP keepalives.
+    6. (Optional) At the X11 setting, you can enable the Enable X11 forwarding. 
+    Do this if you need graphical output, but for this to get this working, 
+    you need to install separately a X11 server for Windows.
     7. Left click on open.
     8. Introduce your SHARKusername.
     9. Introduce your password.
-    10. Type: ssh shark .
+    10. Type: ssh shark or ssh 145.88.76.217
     11. Introduce your password again.
     12. Congratulations! You are now in SHARK.
     
@@ -189,7 +208,7 @@ First option (the session is saved for future connections):
     1. Open MobaXterm.
     2. Click on sessions.
     3. Click on ssh.
-    4. Type 'res-hpc-lo01' or '145.88.76.243' in 'Remote host'.
+    4. Type 'res-hpc-lo02' or '145.88.76.217' in 'Remote host'.
     5. Select specify username and introduce your SHARKusername, and set port to 22.
     6. (Optional) Check the 'Follow SSH path' in the 'Advanced SSH settings'-TAB.
     7. Check the 'Connect through SSH gateway (jump host)' in the 'Network settings'-TAB.
@@ -208,7 +227,7 @@ Second option (faster)
     2. Click on start local terminal.
     3. Type: ssh SHARKusername@145.88.35.10 .
     4. Introduce your password.
-    5. Type: ssh res-hpc-lo01 or ssh 145.88.76.243 .
+    5. Type: ssh res-hpc-lo02 or ssh 145.88.76.217 .
     6. Introduce your password again.
     7. Congratulations! You are now in SHARK. 
     
@@ -222,8 +241,8 @@ Before connecting the first time follow the next steps:
     2. Create a config file inside your .ssh directory and add the following: vi ~/.ssh/config
     3. Add also:
       Host resshark
-        Hostname 145.88.76.243
-        Localforward 6001 145.88.76.243:22
+        Hostname 145.88.76.217
+        Localforward 6001 145.88.76.217:22
         User <SHARKUsername>
         ProxyCommand ssh -q -X -C SHARKUsername@145.88.35.10 nc %h %p
     4. Set the permissions for the user for the .ssh directory: chmod 700 ~/.ssh  
@@ -242,7 +261,7 @@ Faster option (does not require the config file):
 
     1. Open a Terminal.
     2. Type ssh -X SHARKusername@res-ssh-alg01.researchlumc.nl
-    3. Type ssh res-hpc-lo01.
+    3. Type ssh res-hpc-lo02.
     4. Congratulations! You are now in SHARK.
     
     
@@ -250,7 +269,7 @@ You can also install X2Go (similar to mobaXterm). You can obtain more informatio
     
 ### Mac users
 
-Recommended option by the mantainers of SHARK.
+Recommended option by the maintainers of SHARK.
 
 Before connecting the first time follow the following steps:
 
@@ -258,8 +277,8 @@ Before connecting the first time follow the following steps:
     2. Create a config file inside your .ssh directory and add the following: vi ~/.ssh/config
     3. Add also:
       Host resshark
-        Hostname 145.88.76.243
-        Localforward 6001 145.88.76.243:22
+        Hostname 145.88.76.217
+        Localforward 6001 145.88.76.217:22
         User <SHARKUsername>
         ProxyCommand ssh -q -X -C SHARKUsername@145.88.35.10 nc %h %p
     4. Set the permissions for the user for the .ssh directory: chmod 700 ~/.ssh  
@@ -278,7 +297,7 @@ Fast option (does not require the config file):
 
     1. Open a Terminal.
     2. Type ssh -Y SHARKusername@res-ssh-alg01.researchlumc.nl
-    3. Type ssh res-hpc-lo01.
+    3. Type ssh res-hpc-lo02.
     4. Congratulations! You are now in SHARK.
     
     
@@ -318,7 +337,7 @@ If you are using **Putty** to connect to SHARK, the process is far more difficul
 
 \underline{Using cable connection:}
 
-First **Filezilla** is installed. Fill the host (145.88.76.243), the username (SHARKusername), the password (SHARKpassword) and the port (22) as in Figure 2 (Watch out! The host name of the image is not the correct one), and press the ENTER key. 
+First **Filezilla** is installed. Fill the host (145.88.76.217), the username (SHARKusername), the password (SHARKpassword) and the port (22) as in Figure 2 (Watch out! The host name of the image is not the correct one), and press the ENTER key. 
 
 ![Filezilla](`r paste0(params$working_directory,"/Capture.png")`)
 
@@ -326,7 +345,7 @@ On the left side of the screen you will have the files/folders on your computer 
 
 \underline{Not using cable connection:}
 
-First **WinSCP** is installed. Click on New Session. Go to advanced settings and select tunnel on the left side (see Figure 3). Select "connect through SSH tunnel". Fill the hostname (145.88.35.10), Port number (22), user name (SHARKusername) and password (SHARKpassword) and click on OK. Then, fill in the new window the hostname (145.88.76.243), Port number (22), user name (SHARKusername) and password (SHARKpassword).
+First **WinSCP** is installed. Click on New Session. Go to advanced settings and select tunnel on the left side (see Figure 3). Select "connect through SSH tunnel". Fill the hostname (145.88.35.10), Port number (22), user name (SHARKusername) and password (SHARKpassword) and click on OK. Then, fill in the new window the hostname (145.88.76.217), Port number (22), user name (SHARKusername) and password (SHARKpassword).
 Once connected, it works similarly to Filezilla and Windows.
 
 ![WinSCP advance options window](`r paste0(params$working_directory,"/login_tunnel.png")`)
@@ -350,11 +369,11 @@ In this example, "myfile.txt" is copied to the directory /exports/fsw of SHARK.
 
 If you want to transfer the whole folder with its content you need to add -r, for example:
 
-scp -r mydirectory SHARKusername@res-hpc-lo01:/exports/fsw
+scp -r mydirectory SHARKusername@res-hpc-lo02:/exports/fsw
 
 To \underline{download} files/folder from SHARK just interchange the paths: 
 
-**scp SHARKusername@res-hpc-lo01:/exports/fsw/myfile.txt MyDocuments**
+**scp SHARKusername@res-hpc-lo02:/exports/fsw/myfile.txt MyDocuments**
 
 In this example, myfile.txt is downloaded from SHARK to your local folder MyDocuments.
 
@@ -372,7 +391,7 @@ Second, connect to the jump host typing
 
 Third, transfer the file to SHARK (home folder):
 
-**scp text.txt SHARKusername@res-hpc-lo01:/home/SHARKusername**
+**scp text.txt SHARKusername@res-hpc-lo02:/home/SHARKusername**
 
 Optional: Remove the files from the jump host.
 
@@ -385,7 +404,7 @@ First, connect to the jump host:
 
 Second, transfer the file from SHARK (home directory) to the jump host:
 
-**scp SHARKusername@res-hpc-lo01:/home/SHARKusername/text.txt /home/SHARKusername**
+**scp SHARKusername@res-hpc-lo02:/home/SHARKusername/text.txt /home/SHARKusername**
 
 Third, exit the jump host. Go back to your own PC/laptop terminal.
 
@@ -419,7 +438,7 @@ For more information on how to transfer files from or to a cluster, [*click here
 
 **\underline{ Fugu (Mac users) }**
 
-Start by install Fugu. Then, open Fugu and in the menu go to SSH and afterward New SSH tunnel (cmd T). Fill Create Tunnel to (145.88.76.243), Service or Port (22), Tunnel Host(145.88.35.10), Username (SHARKusername) and Port (22).
+Start by install Fugu. Then, open Fugu and in the menu go to SSH and afterward New SSH tunnel (cmd T). Fill Create Tunnel to (145.88.76.217), Service or Port (22), Tunnel Host(145.88.35.10), Username (SHARKusername) and Port (22).
 
 Next, type your password.
 
@@ -434,7 +453,7 @@ On the left side of the screen you will have the files/folders on your computer 
 
 *Warning: Filezilla only works if you are connected via cable to the FSW network.*
 
-First **Filezilla** is installed. Fill the host (145.88.76.243), the username (SHARKusername), the password (SHARKpassword) and the port (22) as in Figure 2, and press the ENTER key. 
+First **Filezilla** is installed. Fill the host (145.88.76.217), the username (SHARKusername), the password (SHARKpassword) and the port (22) as in Figure 2, and press the ENTER key. 
 
 On the left side of the screen you will have the files/folders on your computer and on the right side of the screen the files/folders on the SHARK cluster. You can manage your files in a similar way as in the Windows environment.
 
@@ -575,10 +594,15 @@ source("/home/jclaramuntganzalez/sharktutorial/MyEvaluation.R")
 
 #An alternative to the previous lines is to create your own directory
 #and upload the files to it. For example: 
-#source("/yourdirectorypath/MyDataGeneration.R")
-#source("/yourdirectorypath/Method_new.R")
-#source("/yourdirectorypath/Method_old.R")
-#source("/yourdirectorypath/MyEvaluation.R")
+#source("/home/SHARKusername/yourdirectory/MyDataGeneration.R")
+#source("/home/SHARKusername/yourdirectory/Method_new.R")
+#source("/home/SHARKusername/yourdirectory/Method_old.R")
+#source("/home/SHARKusername/yourdirectory/MyEvaluation.R")
+
+#IMPORTANT WARNING!!!
+#When creating your own simulation study, 
+#make sure to creare your own directory on your Home directory. 
+#For example: /home/SHARKusername/projectName
 
 ######### simulation ###########
 # Generate data
@@ -607,6 +631,12 @@ MyResult <- c(MyResult1, MyResult2)
 setwd("/exports/fsw/claramuntj/sharktutorial")
 #Alternatively, you can also create your folder in the export/fsw directory 
 #and set it as your working directory.
+
+#IMPORTANT WARNING!!!
+#When creating your own simulation study, make sure to creare your own directory 
+#on the /exports/fsw directory. First create a folder for you, 
+#and within that folder, create a project folder
+#For example: /exports/fsw/SHARKusername/projectName
 
 
 # Write output (also possible to first save everything in a list object)
@@ -658,7 +688,18 @@ For your own simulation study, we advise you to start by running only the row of
 
 We have an \texttt{R}-script with simulation code, *MainSimulationScriptSLURM.R*. We also have a bash script *RunMySimulationSLURM.sh* which 'starts' the \texttt{R}-script. But how do we actually start our simulation? We simply use the *sbatch* command in a double for-loop. Thus, our jobs are submitted to shark in a parallel fashion. 
 
-Let's suppose that we want to submit all the replications for the first row of our design matrix. The code should be as follow:
+Before submitting multiple jobs, it is a good practice to submit only one first, in order to check that everything works properly. You can do it in the following way:
+
+```{#numCode3aExtra .sh .numberlines}
+i=1 j=1 sbatch RunMySimulationSLURM.sh
+```
+
+In your project folder of the home directory you will observe two new files. One containing the R console output and one containing the possible errors. If the second one is empty, there were no errors. The error file can be used to spot the errors. Solve them before moving to the next step.
+
+You can also check your saved output (different from the R console output) on the project folder you have created on the exports/fsw directory.
+
+
+Now, it is time to submit multiple jobs. Let's suppose that we want to submit all the replications for the first row of our design matrix. The code should be as follow:
 
 ```{#numCode3a .sh .numberlines}
 
