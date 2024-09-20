@@ -81,7 +81,7 @@ In order to connect to a cluster computer using Windows it is necessary to insta
 First option (the session is saved for future connections):
 
     1. Open MobaXterm.
-    2. Click on sessions.
+    2. Click on Session.
     3. Click on ssh.
     4. Fill in the 'Remote host' (login1.alice.universiteitleiden.nl).
     5. Select specify username and introduce your ALICEusername, and set port to 22.
