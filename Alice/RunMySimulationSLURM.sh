@@ -2,6 +2,7 @@
 #SBATCH -J Sim_study
 #SBATCH -N 1
 #SBATCH --mem=512MB
+#SBATCH --partition=cpu-short
 #SBATCH --output=sim_study_%J.out
 #SBATCH --error=sim_study_%J.err
 #SBATCH --mail-user j.claramunt.gonzalez@fsw.leidenuniv.nl
