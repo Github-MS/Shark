@@ -1,8 +1,8 @@
 ---
 title: "ALICE manual"
-subtitle: "Version 1"
+subtitle: "Version 1.1"
 author: "Jeffrey Durieux, Elise Dusseldorp, Wouter van Loon & Juan Claramunt"
-date: "20/07/2022"
+date: "03/07/2025"
 output:
   pdf_document:
     number_sections: yes
@@ -43,119 +43,6 @@ The document is structured as follows:
 
 There are several options to connect to ALICE. They depend on your operating system (Windows, Linux, Mac OS, etc.).
 
-## Connection using a device that is connected to the FSW network by cable (not wifi).
-
-\underline{Details of the connection:}
-
-\noindent\fbox{%
-    \parbox{\textwidth}{%
-\underline{Server information of 1st login node:}\\
-
-\textbf{Hostname:} login1.alice.universiteitleiden.nl\\
-\textbf{Port:} 22}\\
-}
-
-
-### Windows users
-
-In order to connect to a cluster computer using Windows it is necessary to install a client SSH software. The most common options are Putty and MobaXterm (recommended option).
-
-**Connect with Putty**
-
-    1. Open putty.
-    2. Introduce IP address or hostname (see details above).
-    3. Select ssh.
-    4. (Optional) Set a name under saved sessions and save. 
-    5. (Optional) At the connection setting, fill in 60 at the Seconds between keepalives.
-    If needed, enable the Enable TCP keepalives.
-    6. (Optional) At the X11 setting, you can enable the Enable X11 forwarding. 
-    Do this if you need graphical output, but for this to get this working, 
-    you need to install separately a X11 server for Windows.
-    5. Left click on open.
-    6. Introduce your ALICEusername.
-    7. Introduce your password.
-    8. Congratulations! You are now in ALICE.
-  
-**Connect with MobaXterm** (recommended)
-
-First option (the session is saved for future connections):
-
-    1. Open MobaXterm.
-    2. Click on Session.
-    3. Click on ssh.
-    4. Fill in the 'Remote host' (login1.alice.universiteitleiden.nl).
-    5. Select specify username and introduce your ALICEusername, and set port to 22.
-    6. (Optional) Check the 'Follow SSH path' in the 'Advanced SSH settings'-TAB.
-    7. (Optional) Un-check the 'Display reconnection message at session end' in
-    the 'Bookmark settings'-TAB.
-    8. Click on OK.
-    9. Introduce your password.
-    10. Congratulations! You are now in ALICE.
-    
-Second option (faster):
-
-    1. Open MobaXterm
-    2. Click on start local terminal.
-    3. Type: ssh <ALICEusername>@login1.alice.universiteitleiden.nl
-    4. Introduce your password.
-    5. Congratulations! You are now in ALICE.
-    
-
-### Linux users
-
-First option (recommended):
-
-    1. Open a Terminal and create a directory (if needed) .ssh in your home directory. 
-    2. Create a config file inside your .ssh directory and add the following: vi ~/.ssh/config 
-    (only the first time)
-    3. Add to the config file: (only the first time)
-      Host login1.alice.universiteitleiden.nl
-        Hostname login1.alice.universiteitleiden.nl
-        User <ALICEUsername>
-        ServerAliveInterval 60
-    4. Set the permissions for the user for the .ssh directory: chmod 700 ~/.ssh (only the first time)  
-    5. Set the permissions for the user on all the files in your .ssh directory: chmod 600 ~/.ssh/* 
-    (only the first time)
-    6. Type ssh <ALICEUsername>@login1.alice.universiteitleiden.nl
-    7. Type your password.
-    8. Congratulations! You are now in ALICE.
-
-Second option (faster):
-
-    1. Open the terminal.
-    2. Type: ssh -XY <ALICEusername>@login1.alice.universiteitleiden.nl
-    3. Type your password.
-    4. Congratulations! You are now in ALICE.
-    
-### Mac users
-
-First option (recommended):
-
-    1. Open a Terminal and create a directory (if needed) .ssh in your home directory. 
-    2. Create a config file inside your .ssh directory and add the following: vi ~/.ssh/config 
-    (only the first time)
-    3. Add to the config file: (only the first time)
-      Host login1.alice.universiteitleiden.nl
-        Hostname login1.alice.universiteitleiden.nl
-        User <ALICEUsername>
-        ServerAliveInterval 60
-    4. Set the permissions for the user for the .ssh directory: chmod 700 ~/.ssh (only the first time)  
-    5. Set the permissions for the user on all the files in your .ssh directory: chmod 600 ~/.ssh/* 
-    (only the first time)
-    6. Type ssh <ALICEUsername>@login1.alice.universiteitleiden.nl
-    7. Type your password.
-    8. Congratulations! You are now in ALICE.
-
-Second option (faster):
-
-    1. Open the terminal.
-    2. Type: ssh -XY <ALICEusername>@login1.alice.universiteitleiden.nl
-    3. Type your password.
-    4. Congratulations! You are now in ALICE.
-
-## Connection using any device.
-
-For any device on any location, follow the next steps.
 
 \underline{Details of the connection:}
 
@@ -320,20 +207,10 @@ Below the path you can find the files and folders in the current path.
 
 ### Putty users
 
-If you are using **Putty** to connect to ALICE, the process is far more difficult. It is necessary to download a software such as Filezilla or WinSCP and create an SSH tunnel (in case you are not connected to the FSW network by cable). Unluckily, creating these tunnels is not possible with Filezilla.
-
-\underline{Using cable connection:}
-
-First **Filezilla** is installed. Fill the host (login1.alice.universiteitleiden.nl), the username (ALICEusername), the password (ALICEpassword) and the port (22) as in Figure 2 (Watch out! The host name of the image is not the correct one), and press the ENTER key. 
-
-![Filezilla](`r paste0(params$working_directory,"/Capture.png")`)
-
-On the left side of the screen you will have the files/folders on your computer and on the right side of the screen the files/folders on the ALICE cluster. You can manage your files in a similar way as in the Windows environment.
-
-\underline{Not using cable connection:}
+If you are using **Putty** to connect to ALICE, the process is far more difficult. It is necessary to download a software such as WinSCP and create an SSH tunnel.
 
 First **WinSCP** is installed. Click on New Session. Go to advanced settings and select tunnel on the left side (see Figure 3). Select "connect through SSH tunnel". Fill the hostname (ssh-gw.alice.universiteitleiden.nl), Port number (22), user name (ALICEusername) and password (ALICEpassword) and click on OK. Then, fill in the new window the hostname (login1.alice.universiteitleiden.nl), Port number (22), user name (ALICEusername) and password (ALICEpassword).
-Once connected, it works similarly to Filezilla and Windows.
+
 
 ![WinSCP advance options window](`r paste0(params$working_directory,"/login_tunnel.png")`)
 
@@ -364,7 +241,7 @@ To \underline{download} files/folder from ALICE just interchange the paths:
 
 In this example, myfile.txt is downloaded from ALICE to your local folder MyDocuments.
 
-**Remark**: If you are not using a device that is connected to the FSW network by cable (not wifi) the files must be transfered through the jump host. This means that you need to transfer the files from your PC/laptop to the jump host using scp and then from the jump host to ALICE (or vice versa if you want to download files from ALICE). Let's see how to do it with two examples:
+**Remark**: In ALICE, the files must be transfered through the jump host. This means that you need to transfer the files from your PC/laptop to the jump host using scp and then from the jump host to ALICE (or vice versa if you want to download files from ALICE). Let's see how to do it with two examples:
 
 \underline{Transfer the file text.txt from your laptop/PC to ALICE.}
 
@@ -435,14 +312,6 @@ In the main window, fill out the field Connect to: with "localhost"", type your 
 
 On the left side of the screen you will have the files/folders on your computer and on the right side of the screen the files/folders on the ALICE cluster. ou can now transfer files by dragging them between the left and right screen.
 
-
-**\underline{ Filezilla (Linux users) }**
-
-*Warning: Filezilla only works if you are connected via cable to the FSW network.*
-
-First **Filezilla** is installed. Fill the host (login1.alice.universiteitleiden.nl), the username (ALICEusername), the password (ALICEpassword) and the port (22) as in Figure 2, and press the ENTER key. 
-
-On the left side of the screen you will have the files/folders on your computer and on the right side of the screen the files/folders on the ALICE cluster. You can manage your files in a similar way as in the Windows environment.
 
 **\underline{ X2Go (Linux users) }**
 
@@ -650,12 +519,13 @@ The bash script 'starts' the \texttt{R}-script *'MainSimulationScriptSLURM.R'* w
 #SBATCH -J Sim_study
 #SBATCH -N 1
 #SBATCH --mem=512MB
+#SBATCH --partition=cpu-short
 #SBATCH --output=sim_study_%J.out
 #SBATCH --error=sim_study_%J.err
 #SBATCH --mail-user j.claramunt.gonzalez@fsw.leidenuniv.nl
 #SBATCH --mail-type=BEGIN,END,FAIL
 
-module load R/4.0.5-foss-2020b
+module load R/4.4.0-gfbf-2023a
 
 Rscript MainSimulationScriptSLURM.R $i $j
 
@@ -663,7 +533,7 @@ Rscript MainSimulationScriptSLURM.R $i $j
 
 For the small simulation example we are going to run, requesting 512MB of memory in 1 nodes should be enough. 
 
-For your own simulation study, we advise you to start by running only the row of your design which you expect to require more memory. If 512MB is enough there is no need to modify the script to run all the jobs. In case the memory is not enough (ALICE will return an error), increase it gradually, for example, with increments of 0.5Gb. Asking for too much memory will require a node with more memory, and consequently, your job will be more time in the queue.
+For your own simulation study, we advise you to start by running only the row of your design which you expect to require more memory. If 512MB is enough there is no need to modify the script to run all the jobs. In case the memory is not enough (ALICE will return an error), increase it gradually, for example, with increments of 0.5Gb. Asking for too much memory will require a node with more memory, and consequently, your job will be more time in the queue. Also, make sure to select the right partition for your job. cpu-short (max 4 hours), cpu-medium (max 1 day) and cpu-long (max 7 days) are the partitions available for jobs that do not require a GPU. If you need a GPU, you can select the partition gpu-short, gpu-medium or gpu-long. Other partitions are available. Check https://pubappslu.atlassian.net/wiki/spaces/HPCWIKI/pages/37519504/Partitions+on+ALICE
 
 
 ## Start your embarrassingly parallel jobs
@@ -701,7 +571,7 @@ i=$rownumber j=$replication sbatch RunMySimulationSLURM.sh; done; done
 
 **Note 1:** *Remove the email arguments (lines 7 and 8) from RunMySimulationSLURM.sh. Otherwise you will receive 240 emails.*
 
-**Note 2:** *In order to use R on ALICE, you first need to 'load' it. This can simply be done on the command line by typing module load R/4.0.5-foss-2020b (or select another R version available on ALICE)*
+**Note 2:** *In order to use R on ALICE, you first need to 'load' it. This can simply be done on the command line by typing module load R/4.4.0-gfbf-2023a (or select another R version available on ALICE)*
 
 You can submit the double for loop on the command line in ALICE. This double for loop will start 10 x 12 = 120 jobs that will run in parallel. Each job has no dependency on each other, meaning that you can run each row of the design completely seperate. This is known as embarrasingly parallel computing and it saves you a lot of computation time!
 
@@ -720,11 +590,12 @@ Creating a job array is very simple: just include the '--array' flag in your bas
 #SBATCH -J my_array
 #SBATCH -N 1
 #SBATCH --mem=512MB
+#SBATCH --partition=cpu-short
 #SBATCH --output=sim_study_%a.out
 #SBATCH --error=sim_study_%a.err
 #SBATCH --array=1-10
 
-module load R/4.0.5-foss-2020b
+module load R/4.4.0-gfbf-2023a
 
 i=1
 
@@ -748,7 +619,7 @@ It can be useful to save not only the results of a script, but also what is prin
 #SBATCH --error=sim_study_%a.err
 #SBATCH --array=1-40
 
-module load R/4.0.5-foss-2020b
+module load R/4.4.0-gfbf-2023a
 
 Rscript my_script.R $SLURM_ARRAY_TASK_ID
 ```
@@ -863,7 +734,7 @@ You will notice that the job array examples above do not include email notificat
 Start an individual R session on ALICE: 
 ```
 $ salloc -N1 -n1
-$ module load R/4.0.5-foss-2020b (or another version)
+$ module load R/4.4.0-gfbf-2023a (or another version)
 $ R
 ```
 Once R is open install the package you want as usual in R, using:
@@ -878,7 +749,7 @@ Choose a CRAN mirror(if you have not included it as an argument of the install.p
 
 The first step is to create a personal folder (if you do not have one yet). To do so, type on the command line:
 
-mkdir /home/YOUR_DIRECTORY/R/x86_64-pc-linux-gnu-library/4.0 (or the corresponding R version)
+mkdir /home/YOUR_DIRECTORY/R/x86_64-pc-linux-gnu-library/4.4 (or the corresponding R version)
 
 Then, create the R script to install the packages, 'InstallPackages.R':
 ```{r, eval=F}
@@ -894,7 +765,7 @@ Finally, generate the bash script 'InstallPackages.sh' to run the R script in AL
 #SBATCH --output=sim_study.out
 #SBATCH --error=sim_study.err
 
-module load R/4.0.5-foss-2020b
+module load R/4.4.0-gfbf-2023a
 
 Rscript InstallPackages.R
 ```
@@ -941,6 +812,7 @@ Next, we need to slightly modify the .sh file. An example of it is the following
 #SBATCH -J matlab_example
 #SBATCH -N 1
 #SBATCH --mem=512MB
+#SBATCH --partition=cpu-short
 #SBATCH --output=matlab_example.out
 #SBATCH --error=matlab_example.err
 
